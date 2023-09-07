@@ -1,0 +1,40 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import MemberCard from "~/components/partials/MemberCard.astro";
+import SearchAndStatus from "~/components/partials/SearchAndStatus.astro";
+
+import { Constants, iMember } from "~/types"; 
+import HeroSection from "~/components/partials/HeroSection.astro"
+import Layout from "~/layouts/Layout.astro";
+import { memberSearchFilter, paginate } from "~/lib";
+import Pagination from "~/components/partials/Pagination.astro";
+
+
+const entries = Object.fromEntries(Astro.url.searchParams.entries())
+const search = entries["search"] || ""
+const page = entries["page"] || "1"
+
+const list: CollectionEntry<"members">[] = await getCollection("members", ({ data, body }) => {
+  return memberSearchFilter(data as iMember, search, body)
+})
+
+const pageProps = paginate({ list, page, url: Astro.url, size: 12 })
+
+const title = `Members | ${Constants.SITENAME}`
+const keywords = [
+  "members"
+]
+--- 
+<Layout title={ title } keywords={keywords}>
+  <HeroSection
+    header="Members Directory"
+    showCta={false}
+    subline="Explore the list of our member bodies" />
+  <div class="center flex flex-col gap-2 items-center">
+    <SearchAndStatus count={list.length} name="members" />
+    <div class="card-grid">
+      { pageProps.data.map(member => <MemberCard member={member}  />) }
+    </div>
+    <Pagination page={pageProps} />
+  </div>
+</Layout> 

@@ -1,0 +1,5 @@
+{
+	"runtime": "nodejs18.x",
+	"handler": "dist\\entry.pages\\events\\_slug_.astro.mjs",
+	"launcherType": "Nodejs"
+}

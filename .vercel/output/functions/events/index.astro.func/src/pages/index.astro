@@ -1,0 +1,123 @@
+---
+import HeroSection from '~/components/partials/HeroSection.astro';
+import Layout from '../layouts/Layout.astro';
+import { Constants, iSector } from '~/types'
+import ButtonLink from '~/components/partials/ButtonLink.astro';
+import MembersList from '~/components/partials/MembersList.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Sector from '~/components/partials/Sector.astro';
+import { Image } from "astro:assets"
+import EventList from '~/components/partials/EventList.astro';
+import TeamList from '~/components/partials/TeamList.astro';
+import APBNSliders from '~/components/partials/APBNSliders.astro';
+import AdvertisingSliders from '~/components/partials/AdvertisingSliders.astro';
+
+const allMembers: CollectionEntry<"members">[] = await getCollection("members")
+const members = allMembers.slice(0,4)
+
+const allEvents: CollectionEntry<"events">[] = await getCollection("events")
+const events = allEvents
+.filter(event => event.data.active)
+.sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date))
+.slice(0, 2)
+
+const allTeam: CollectionEntry<"team">[] = await getCollection("team")
+const team = allTeam
+.sort((a, b) => Number(a.data.order) - Number(b.data.order))
+.slice(0,4)
+
+const keywords = [
+	"homepage",
+	"apbn",
+	"association"
+]
+
+
+const healthImg = "/images/homepage/health.webp"
+const financeImg = "/images/homepage/finance.webp"
+const engineeringImg = "/images/homepage/engineering.webp"
+const managementImg = "/images/homepage/management.webp"
+const speakImg = "/images/homepage/speak.webp"
+
+const sectors: iSector[] = [
+	{ name: "finance", img: financeImg },
+	{ name: "health", img: healthImg },
+	{ name: "management", img: managementImg }, 
+	{ name: "engineering", img: engineeringImg },
+]
+
+const title = `Home | ${Constants.SITENAME}`
+// const president = "/images/president_square.webp"
+---
+
+<Layout title={title} keywords={keywords}>
+  <HeroSection
+    header="APBN"
+    showCta={true}
+    subline="Uniting voices and providing expert advice to the Government on matters impacting professionals and their practices." />
+	<APBNSliders />
+	<section aria-label="about" class="bg-lighter-gray dark:bg-darkest">
+		<div class="flex flex-col gap-2 center">
+			<div class="grid grid-cols-2 gap-2 relative">
+				<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full z-[2] overflow-hidden w-32 md:w-[200px] border-8 border-white dark:border-darkest">
+					<Image
+						src={speakImg}
+						width={1000}
+						height={1080}
+						alt="speak"
+						class="aspect-square w-full"
+						format="webp"/>
+				</div>
+				{
+					sectors.map((sector, idx) => <Sector idx={idx} sector={sector} />)
+				}
+			</div>
+			<p>In important national decisions, the Government often overlooks getting input or only consults a few individuals whose opinions might not represent those of all the professional groups. However, we understand that good policies come from well-informed advice.</p>
+
+			<p>This is where APBN steps in. The Association of Professional Bodies of Nigeria (APBN) acts as a bridge to address this gap. APBN brings together different recognized professional groups under one roof, fostering collaboration among professionals in Nigeria. It provides a united voice for its members while also offering expert advice to the Government about issues impacting professionals and their work practices.</p>
+			<ButtonLink className="bt bt-orange dark:bt-white text-center self-center w-full sm:w-fit" title="know more" href="/about" type="link" />
+		</div>
+	</section>
+	<AdvertisingSliders />
+	<section aria-label="members" class="bg-lighter-gray dark:bg-darkest">
+		<div class="center flex flex-col gap-2 justify-center items-center">
+			<div class="text-center mb-4">
+				<h2 aria-label="ourprograms title" class="text-xl font-semibold uppercase">
+					Member Bodies
+				</h2>
+				<p>List of the {allMembers.length}-Member Body in APBN</p>
+			</div>
+			<MembersList members={members} />
+			<ButtonLink className="bt bt-orange dark:bt-white text-center self-center w-full sm:w-fit" title="see all member bodies" href="/members" type="link" />
+		</div>
+	</section>
+	<section aria-label="watch latest events">
+		<div class="center flex flex-col gap-2 items-center">
+			<div class="text-center mb-4">
+				<h2 aria-label="ourprograms title" class="text-xl font-semibold uppercase">
+					watch latest events
+				</h2>
+				<p>Explore our recent events</p>
+			</div>
+			<EventList events={events} />
+			<ButtonLink
+				href="/events"
+				className="bt bt-orange dark:bt-white w-full sm:w-fit text-center"
+				type="link"
+				title="see all events"
+			/>
+		</div>
+	</section>
+	<section aria-label="team" class="bg-lighter-gray dark:bg-darkest">
+		<div class="center flex flex-col gap-2 justify-center items-center">
+			<div class="text-center mb-4">
+				<h2 aria-label="ourprograms title" class="text-xl font-semibold uppercase">
+					The Team
+				</h2>
+				<p>Meet our management team</p>
+			</div>
+			<TeamList members={team} />
+			<ButtonLink className="bt bt-orange dark:bt-white text-center self-center w-full sm:w-fit" title="see all team members" href="/team" type="link" />
+		</div>
+	</section>
+</Layout> 

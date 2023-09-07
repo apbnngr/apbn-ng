@@ -1,0 +1,5 @@
+{
+	"runtime": "nodejs18.x",
+	"handler": "dist\\entry.pages\\resources\\apbn-membership-registration.astro.mjs",
+	"launcherType": "Nodejs"
+}

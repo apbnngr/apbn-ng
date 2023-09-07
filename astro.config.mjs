@@ -1,14 +1,14 @@
 import { defineConfig } from 'astro/config';
-import netlify from "@astrojs/netlify/functions";
 import tailwind from "@astrojs/tailwind";
 import AstroPWA from "@vite-pwa/astro";
+import vercel from '@astrojs/vercel/serverless';
 
 import prefetch from "@astrojs/prefetch";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  adapter: netlify(),
+  adapter: vercel(),
   integrations: [tailwind(), AstroPWA({
     mode: "development",
     base: "/",
@@ -48,5 +48,5 @@ export default defineConfig({
     enabled: true,
     navigateFallbackAllowlist: [/^\/404$/]
   })],
-  experimental: { assets: true }
+  // experimental: { assets: true }
 });
