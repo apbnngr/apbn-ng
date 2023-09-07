@@ -9,7 +9,7 @@ const MembersCollection = defineCollection({
     website: z.string(),
     logo: z.string()
   })
-})
+}) 
 
 const EventsCollection = defineCollection({
   type: "content",
